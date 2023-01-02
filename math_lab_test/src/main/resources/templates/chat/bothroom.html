@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    <title>My Spring WebSocket Chatting</title>
+    <link rel="stylesheet" href="/css/chatroom/main.css"/>
+    <link rel="stylesheet" href="/css/rtc/main.css"/>
+    <style>
+        #menu{
+            width: 310px;
+        }
+        button#uploadFile {
+            margin-left: 225px;
+            margin-top: -55px;
+        }
+        input {
+            padding-left: 5px;
+            outline: none;
+            width: 250px;
+            margin-top: 15px;
+        }
+        .btn fa fa-download {
+            background-color: mediumpurple;
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .btn.active {
+            display: none;
+        }
+
+        .btn span:nth-of-type(1)  {
+            display: none;
+        }
+        .btn span:last-child  {
+            display: block;
+        }
+
+        .btn.active span:nth-of-type(1)  {
+            display: block;
+        }
+        .btn.active span:last-child  {
+            display: none;
+        }
+        .input-group{width:80.5%}
+        .chat-container{position: relative;}
+        .chat-container .btn-group{position:absolute; bottom:-12px; right:-50px; transform: translate(-50%,-50%);}
+    </style>
+</head>
+<body>
+<noscript>
+    <h2>Sorry! Your browser doesn't support Javascript</h2>
+</noscript>
+
+<main role="main" class="container-fluid">
+    <h1>ChatForYOU with WebRTC</h1>
+    <input type="hidden" id="id" name="id" th:value="${room.roomId}"/>
+    <input type="hidden" id="uuid" name="uuid" th:value="${uuid}">
+    <div class="col-lg-12 mb-3">
+        <div class="mb-3" th:text=" '@ Room #' + ${room.roomName}">
+            Local User Id
+        </div>
+        <div class="col-lg-12 mb-3">
+            <div class="d-flex justify-content-around mb-3">
+                <div id="buttons" class="row">
+                    <div class="btn-group mr-2" role="group">
+                        <div class="mr-2" data-toggle="buttons">
+                            <label class="btn btn-outline-success" id="video_off">
+                                <input type="radio" name="options" style="display:none" autocomplete="off">Video On
+                            </label>
+                            <label class="btn btn-outline-warning active" id="video_on">
+                                <input type="radio" name="options" style="display:none" autocomplete="off" checked>Video Off
+                            </label>
+                        </div>
+                        <div class="mr-2" data-toggle="buttons">
+                            <label class="btn btn-outline-success" id="audio_off">
+                                <input type="radio" name="options" style="display:none" autocomplete="off">Audio On
+                            </label>
+                            <label class="btn btn-outline-warning active" id="audio_on">
+                                <input type="radio" name="options" style="display:none" autocomplete="off" checked>Audio Off
+                            </label>
+                        </div>
+                        <div class="mr-2" data-toggle="buttons">
+                            <label class="btn btn-outline-success" id="view_on">
+                                <input type="radio" name="options" style="display:none" autocomplete="off">view On
+                            </label>
+                            <label class="btn btn-outline-warning active" id="view_off">
+                                <input type="radio" name="options" style="display:none" autocomplete="off">view Off
+                            </label>
+                        </div>
+                    </div>
+
+                    <a href="/">
+                        <button type="button" class="btn btn-outline-danger" id="exit" name="exit">
+                            Exit Room
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-around mb-3">
+            <div class="col-lg-6 mb-3">
+                <video id="local_video" autoplay playsinline></video>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <video id="remote_video" autoplay playsinline></video>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <video id="share-video" autoplay=""></video>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<div id="username-page">
+    <div class="username-page-container">
+        <h1 class="title">Type your username</h1>
+        <form id="usernameForm" name="usernameForm">
+            <div  th:if="${user == null}" class="form-group">
+                <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control"/>
+            </div>
+            <div  th:if="${user != null}" class="form-group">
+                <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" th:value="${user.nickName}"/>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="accent username-submit">Start Chatting</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="chat-page" class="hidden">
+    <div class="btn-group dropend">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="showUserListButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            참가한 유저
+        </button>
+        <div id="list" class="dropdown-menu" aria-labelledby="showUserListButton">
+
+        </div>
+    </div>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>[[${room.roomName}]]</h2>
+        </div>
+        <div class="connecting">
+            Connecting...
+        </div>
+        <ul id="messageArea">
+
+        </ul>
+        <form id="messageForm" name="messageForm" nameForm="messageForm">
+            <div class="form-group">
+                <div class="input-group clearfix">
+                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off"
+                           class="form-control"/>
+                    <button type="submit" class="primary">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="/js/socket.js"></script>
+<script src="/js/webrtc_client.js"></script>
+</body>
+</html>
