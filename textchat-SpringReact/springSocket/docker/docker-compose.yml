@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  db:
+    image: mysql
+    container_name: pgi-db
+    environment:
+      MYSQL_ROOT_PASSWORD: jungle12
+      MYSQL_USER: jungle
+      MYSQL_PASSWORD: jungle12
+      MYSQL_DATABASE: pgi
+    ports:
+      - 3306:3306
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
