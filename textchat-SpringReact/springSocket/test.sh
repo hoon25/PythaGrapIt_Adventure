@@ -14,9 +14,11 @@ echo "springboot 서버 ON"
 echo "###################"
 
 cd ../frontend
+cp ./package_server.json ./package.json
 docker rm -f pgi-web
 docker build -f ./Dockerfile -t pgi-web-image .
 docker run -itd -p 3000:3000 --name pgi-web pgi-web-image
+cp ./package_local.json ./package.json
 cd ./springSocket
 echo "###################"
 echo "react 서버 ON"
