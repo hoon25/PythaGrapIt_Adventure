@@ -21,9 +21,11 @@ public class SslConfig {
 
                 securityConstraint.setUserConstraint("CONFIDENTIAL");
                 SecurityCollection collection = new SecurityCollection();
-                collection.addPattern("/*");
+//                collection.addPattern("/*");
                 securityConstraint.addCollection(collection);
                 context.addConstraint(securityConstraint);
+
+                System.out.println("context = " + context);
             }
         };
 

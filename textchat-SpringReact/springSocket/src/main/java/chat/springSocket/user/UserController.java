@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,8 +24,10 @@ public class UserController {
 //        return "hi";
 //    }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/login")
     public ResponseEntity<UserEntity> login(@RequestBody UserEntity userEntity, HttpSession session) {
+        log.info("enter post login");
         System.out.println("userEntity = " + userEntity);
         UserEntity user = userService.logIn(userEntity.getEmail());
         if (user == null) {
