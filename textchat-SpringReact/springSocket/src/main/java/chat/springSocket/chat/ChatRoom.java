@@ -13,12 +13,18 @@ public class ChatRoom {
     private String roomName;
     private long userCount;
 
+    public enum  ChatType {
+        MSG, RTC
+    }
+    private ChatType chatType;
+
     private HashMap<String, UserEntity> userList = new HashMap<>();
 
-    public ChatRoom create(String roomName){
+    public ChatRoom create(String roomName, ChatType chatType) {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.roomId = UUID.randomUUID().toString();
         chatRoom.roomName = roomName;
+        chatRoom.chatType = chatType;
         return chatRoom;
     }
 

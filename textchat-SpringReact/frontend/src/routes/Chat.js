@@ -14,8 +14,6 @@ let ChatInput = styled(InputGroup)`
 `
 
 var stompClient = null;
-
-
 function Chat({chat}) {
     let [contents, setContents] = useState([]);
     let [messageInput, setMessageInput] = useState("");
@@ -34,6 +32,18 @@ function Chat({chat}) {
         stompClient.connect({}, () => {
             stompClient.subscribe('/sub/chat/room/' + chat.roomId, onMessageReceived)
         });
+
+        console.log(stompClient.connected);
+        // if(stompClient.connected) {
+        //     console.log("stompClient connected!!!");
+        //     stompClient.send("/pub/chat/enterUser", {},
+        //         JSON.stringify({
+        //             roomId: chat.roomId,
+        //             sender: user.nickName,
+        //             type: 'ENTER'
+        //         })
+        //     )
+        // }
     }, []);
 
 

@@ -39,11 +39,11 @@ public class ChatRoomController {
         if(session.getAttribute("user")==null){
             Random rand = new Random();
             int randomInt = rand.nextInt(10 - 1 + 1) + 1;
-            chatService.createRoom("guest"+randomInt+"님의 채팅방");
+            chatService.createRoom("guest"+randomInt+"님의 채팅방", chatRoom.getChatType());
         }
         else{
             UserEntity userEntity = (UserEntity) session.getAttribute("user");
-            chatService.createRoom(userEntity.getNickName() + "님의 채팅방");
+            chatService.createRoom(userEntity.getNickName() + "님의 채팅방", chatRoom.getChatType());
         }
         return ResponseEntity.ok().build();
     }

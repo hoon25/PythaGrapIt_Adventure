@@ -10,7 +10,7 @@ public interface ChatRepository {
 
     ChatRoom findRoomById(String roomId);
 
-    ChatRoom createRoom(String roomName);
+    ChatRoom createRoom(String roomName, ChatRoom.ChatType chatType);
 
     void removeRoom(String roomId);
 

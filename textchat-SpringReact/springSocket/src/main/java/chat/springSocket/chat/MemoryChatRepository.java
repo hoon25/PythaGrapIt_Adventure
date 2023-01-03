@@ -22,10 +22,15 @@ public class MemoryChatRepository implements ChatRepository {
     @PostConstruct
     private void init() {
         chatRoomMap = new HashMap<>();
-        ChatRoom testChatRoom1 = new ChatRoom().create("테스트 채팅 방");
-        ChatRoom testChatRoom2 = new ChatRoom().create("테스트 채팅 방2");
+        ChatRoom testChatRoom1 = new ChatRoom().create("테스트 문자 채팅 방", ChatRoom.ChatType.MSG);
+        ChatRoom testChatRoom2 = new ChatRoom().create("테스트 문자 채팅 방2", ChatRoom.ChatType.MSG);
+        ChatRoom testChatRoom3 = new ChatRoom().create("테스트 영상 채팅 방", ChatRoom.ChatType.RTC);
+        ChatRoom testChatRoom4 = new ChatRoom().create("테스트 영상 채팅 방2", ChatRoom.ChatType.RTC);
+
         chatRoomMap.put(testChatRoom1.getRoomId(), testChatRoom1);
         chatRoomMap.put(testChatRoom2.getRoomId(), testChatRoom2);
+        chatRoomMap.put(testChatRoom3.getRoomId(), testChatRoom3);
+        chatRoomMap.put(testChatRoom4.getRoomId(), testChatRoom4);
     }
 
     @Override
@@ -41,8 +46,8 @@ public class MemoryChatRepository implements ChatRepository {
     }
 
     @Override
-    public ChatRoom createRoom(String roomName) {
-        ChatRoom chatRoom = new ChatRoom().create(roomName);
+    public ChatRoom createRoom(String roomName, ChatRoom.ChatType chatType) {
+        ChatRoom chatRoom = new ChatRoom().create(roomName, chatType);
         chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }

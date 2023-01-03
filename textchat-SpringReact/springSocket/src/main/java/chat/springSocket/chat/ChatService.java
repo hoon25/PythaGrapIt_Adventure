@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -14,15 +15,18 @@ public class ChatService {
     private final ChatRepository chatRepository;
 
     public List<ChatRoom> findAllRoom() {
-        return chatRepository.findAllRoom();
+        List<ChatRoom> chatRoom = chatRepository.findAllRoom();
+        return chatRoom;
+//        return chatRoom.stream().filter(room -> room.getChatType() == chatType).collect(Collectors.toList());
     }
 
     public ChatRoom findRoomById(String roomId) {
+
         return chatRepository.findRoomById(roomId);
     }
 
-    public void createRoom(String roomName) {
-        chatRepository.createRoom(roomName);
+    public void createRoom(String roomName, ChatRoom.ChatType chatType) {
+        chatRepository.createRoom(roomName, chatType);
     }
 
     public void removeRoom(String roomId) {
