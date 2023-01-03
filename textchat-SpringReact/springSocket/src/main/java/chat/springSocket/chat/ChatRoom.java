@@ -3,6 +3,7 @@ package chat.springSocket.chat;
 
 import chat.springSocket.user.UserEntity;
 import lombok.Data;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -19,6 +20,7 @@ public class ChatRoom {
     private ChatType chatType;
 
     private HashMap<String, UserEntity> userList = new HashMap<>();
+    private HashMap<String, WebSocketSession> videoList = new HashMap<>();
 
     public ChatRoom create(String roomName, ChatType chatType) {
         ChatRoom chatRoom = new ChatRoom();

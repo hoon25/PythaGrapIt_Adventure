@@ -3,8 +3,11 @@ package chat.springSocket.chat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -41,5 +44,17 @@ public class ChatService {
         chatRepository.delRoomUser(roomId, userId);
     }
 
+
+    public Map<String, WebSocketSession> addClient(ChatRoom room, String name, WebSocketSession session) {
+        return chatRepository.addClient(room, name, session);
+    }
+
+    public Map<String, WebSocketSession> getClients(ChatRoom room) {
+        return chatRepository.getClients(room);
+    }
+
+    public void removeClientByName(ChatRoom room, String userUUID) {
+        chatRepository.removeClientByName(room,userUUID);
+    }
 
 }

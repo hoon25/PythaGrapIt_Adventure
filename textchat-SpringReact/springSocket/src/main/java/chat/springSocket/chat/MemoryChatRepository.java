@@ -6,6 +6,7 @@ import chat.springSocket.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -66,6 +67,25 @@ public class MemoryChatRepository implements ChatRepository {
     @Override
     public void delRoomUser(String roomId, Long userId) {
         chatRoomMap.get(roomId).getUserList().remove(userRepository.findByUserId(userId).getNickName());
+    }
+
+    @Override
+    public Map<String, WebSocketSession> addClient(ChatRoom room, String name, WebSocketSession session) {
+        Map<String, WebSocketSession> userList = room.getVideoList();
+        userList.put(name, session);
+        return userList;
+    }
+
+    @Override
+    public Map<String, WebSocketSession> getClients(ChatRoom room) {
+        Optional<ChatRoom> roomDto = Optional.ofNullable(room);
+
+        return roomDto.<Map<String, WebSocketSession>>map(ChatRoom::getVideoList).orElse(null);
+    }
+
+    @Override
+    public void removeClientByName(ChatRoom room, String userUUID) {
+        room.getVideoList().remove(userUUID);
     }
 }
 
