@@ -27,8 +27,15 @@ public class UserController {
 //        return "hi";
 //    }
 
+//    @GetMapping("/testoverlay")
+    public ResponseEntity<String> loginForm(){
+        log.info("testoverlay");
+        return ResponseEntity.status(HttpStatus.OK).body("hello");
+    }
+
     @PostMapping("/login")
     public ResponseEntity<UserEntity> login(@RequestBody UserEntity userEntity, HttpSession session) {
+        System.out.println("UserController.login");
         System.out.println("userEntity = " + userEntity);
         UserEntity user = userService.logIn(userEntity.getEmail());
         if (user == null) {

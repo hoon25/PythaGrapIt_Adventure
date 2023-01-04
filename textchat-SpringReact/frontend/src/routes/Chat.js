@@ -22,6 +22,7 @@ function Chat({chat}) {
 
 
     useEffect(() => {
+        console.log("Message ServerStart")
         var sock = new SockJs('/ws-stomp');
         console.log("new sockjs");
         console.log(sock);

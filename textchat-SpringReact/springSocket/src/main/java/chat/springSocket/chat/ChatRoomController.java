@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -26,7 +27,16 @@ public class ChatRoomController {
     @GetMapping("/chat")
     public ResponseEntity<List<ChatRoom>> chat() {
         log.info("chat room list");
-        return ResponseEntity.ok().body(chatService.findAllRoom());
+        List<ChatRoom> chatRoomList = chatService.findAllRoom();
+        // VIDEO LIST 예외처리
+        List<ChatRoom> chatRoomDTO = new ArrayList<>();
+        chatRoomList.forEach(chatRoom -> {
+            ChatRoom copyRoom = ChatRoom.builder().roomId(chatRoom.getRoomId()).roomName(chatRoom.getRoomName()).chatType(chatRoom.getChatType()).build();
+            chatRoomDTO.add(copyRoom);
+        });
+        chatRoomDTO.forEach(chatRoom -> chatRoom.setVideoList(null));
+//        return ResponseEntity.ok().body(chatService.findAllRoom());
+        return ResponseEntity.ok().body(chatRoomDTO);
     }
 
     /*
@@ -34,14 +44,14 @@ public class ChatRoomController {
      */
     @PostMapping("/chat/room")
     public ResponseEntity<ChatRoom> createRoom(@RequestBody ChatRoom chatRoom, HttpSession session) {
+        log.info(chatRoom.toString());
         log.info(chatRoom.getRoomName());
         //TODO 채팅방 이름 자동 생성
-        if(session.getAttribute("user")==null){
+        if (session.getAttribute("user") == null) {
             Random rand = new Random();
             int randomInt = rand.nextInt(10 - 1 + 1) + 1;
-            chatService.createRoom("guest"+randomInt+"님의 채팅방", chatRoom.getChatType());
-        }
-        else{
+            chatService.createRoom("guest" + randomInt + "님의 채팅방", chatRoom.getChatType());
+        } else {
             UserEntity userEntity = (UserEntity) session.getAttribute("user");
             chatService.createRoom(userEntity.getNickName() + "님의 채팅방", chatRoom.getChatType());
         }
@@ -56,10 +66,6 @@ public class ChatRoomController {
         log.info("enterRoom");
         return ResponseEntity.ok().body(chatService.findRoomById(roomId));
     }
-
-
-
-
 
 
 }

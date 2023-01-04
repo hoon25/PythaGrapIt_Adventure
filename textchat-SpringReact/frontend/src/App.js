@@ -6,7 +6,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {LogIn, LogOut} from './routes/LogIn';
 import ChatRoom from "./routes/ChatRoom";
 import Chat from "./routes/Chat";
-
+import RTC from "./routes/RTC";
+import TestOverlay from "./routes/TestOverlay";
 
 function App() {
     let user = useSelector(state => state.user);
@@ -23,7 +24,7 @@ function App() {
                     <Nav className="me-auto">
                         <Nav.Link onClick={() => navigate("/")}>Home</Nav.Link>
                         <Nav.Link onClick={() => navigate("/chat")}>Chat</Nav.Link>
-                        <Nav.Link href="#pricing">Pricing</Nav.Link>
+                        <Nav.Link onClick={() => navigate("/test")}>test</Nav.Link>
                     </Nav>
                 </Container>
                 <Nav>
@@ -38,7 +39,9 @@ function App() {
                 <Route path="/login" element={<LogIn/>}/>
                 <Route path="/logout" element={<LogOut/>}/>
                 <Route path="/chat" element={<ChatRoom/>}/>
-                <Route path="/chat/room/:roomId" element={<Chat chat={chat}/>}/>
+                <Route path="/chat/room/msg/:roomId" element={<Chat chat={chat}/>}/>
+                <Route path="/chat/room/rtc/:roomId" element={<RTC chat={chat}/>}/>
+
             </Routes>
         </div>
     );
