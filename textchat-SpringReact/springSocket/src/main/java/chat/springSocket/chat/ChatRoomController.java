@@ -50,10 +50,21 @@ public class ChatRoomController {
         if (session.getAttribute("user") == null) {
             Random rand = new Random();
             int randomInt = rand.nextInt(10 - 1 + 1) + 1;
-            chatService.createRoom("guest" + randomInt + "님의 채팅방", chatRoom.getChatType());
+            if(chatRoom.getChatType() == ChatRoom.ChatType.MSG){
+                chatService.createRoom("guest" + randomInt + "의 문자 채팅방", chatRoom.getChatType());
+            }
+            else {
+                chatService.createRoom("guest" + randomInt + "의 영상 채팅방", chatRoom.getChatType());
+            }
+
         } else {
             UserEntity userEntity = (UserEntity) session.getAttribute("user");
-            chatService.createRoom(userEntity.getNickName() + "님의 채팅방", chatRoom.getChatType());
+            if(chatRoom.getChatType() == ChatRoom.ChatType.MSG){
+                chatService.createRoom(userEntity.getNickName() + "의 문자 채팅방", chatRoom.getChatType());
+            }
+            else {
+                chatService.createRoom(userEntity.getNickName() + "의 영상 채팅방", chatRoom.getChatType());
+            }
         }
         return ResponseEntity.ok().build();
     }

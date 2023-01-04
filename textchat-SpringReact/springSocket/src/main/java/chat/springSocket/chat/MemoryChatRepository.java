@@ -23,15 +23,17 @@ public class MemoryChatRepository implements ChatRepository {
     @PostConstruct
     private void init() {
         chatRoomMap = new HashMap<>();
-        ChatRoom testChatRoom1 = new ChatRoom().create("테스트 문자 채팅 방", ChatRoom.ChatType.MSG);
-        ChatRoom testChatRoom2 = new ChatRoom().create("테스트 문자 채팅 방2", ChatRoom.ChatType.MSG);
-        ChatRoom testChatRoom3 = new ChatRoom().create("테스트 영상 채팅 방", ChatRoom.ChatType.RTC);
-        ChatRoom testChatRoom4 = new ChatRoom().create("테스트 영상 채팅 방2", ChatRoom.ChatType.RTC);
+        ChatRoom testChatRoom1 = new ChatRoom().create("유병수 선생님의 문자 채팅방", ChatRoom.ChatType.MSG);
+        ChatRoom testChatRoom2 = new ChatRoom().create("김다엘 선생님의 문자 채팅방", ChatRoom.ChatType.MSG);
+        ChatRoom testChatRoom3 = new ChatRoom().create("윈터 선생님의 영상 채팅방", ChatRoom.ChatType.RTC);
+        ChatRoom testChatRoom4 = new ChatRoom().create("김수로 선생님의 영상 채팅방", ChatRoom.ChatType.RTC);
+        ChatRoom testChatRoom5 = new ChatRoom().create("장범원 선생님의 문자 채팅방", ChatRoom.ChatType.MSG);
 
         chatRoomMap.put(testChatRoom1.getRoomId(), testChatRoom1);
         chatRoomMap.put(testChatRoom2.getRoomId(), testChatRoom2);
         chatRoomMap.put(testChatRoom3.getRoomId(), testChatRoom3);
         chatRoomMap.put(testChatRoom4.getRoomId(), testChatRoom4);
+        chatRoomMap.put(testChatRoom5.getRoomId(), testChatRoom5);
     }
 
     @Override
