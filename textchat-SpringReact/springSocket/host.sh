@@ -5,6 +5,7 @@ echo "###################"
 echo "mysql 서버 ON"
 echo "###################"
 
+pkill java
 ./gradlew build
 nohup java -jar build/libs/springSocket-0.0.1-SNAPSHOT.jar &
 #docker rm -f pgi-was
@@ -14,8 +15,10 @@ echo "###################"
 echo "springboot 서버 ON"
 echo "###################"
 
+
 cd ../frontend
 cp ./package_server.json ./package.json
+pkill node
 npm install
 nohup npm start &
 #docker rm -f pgi-web
