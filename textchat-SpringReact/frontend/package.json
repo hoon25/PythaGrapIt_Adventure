@@ -24,7 +24,7 @@
     "webstomp-client": "^1.2.6"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "HTTPS=true SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -35,7 +35,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "https://localhost:8443",
   "browserslist": {
     "production": [
       ">0.2%",
