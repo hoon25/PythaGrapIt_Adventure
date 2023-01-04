@@ -1,8 +1,8 @@
-body {
-    /*font-family: helvetica;*/
-    /*display: flex ;*/
-    /*flex-direction: column;*/
-    /*align-items: center;*/
+
+.div-shadow{
+    box-shadow: rgb(0 0 0 / 16%) 2px 2px 30px;
+    border-radius: 8px;
+    background-color: white;
 }
 
 .chat {
@@ -13,18 +13,8 @@ body {
     padding: 10px;
 }
 
-.div-shadow{
-    box-shadow: rgb(0 0 0 / 16%) 2px 2px 30px;
-    border-radius: 8px;
-    background-color: white;
-}
-
-.fabric-whiteboard{
-    border: none!important;
-}
-
 .messages {
-    margin-top: 30px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
 }

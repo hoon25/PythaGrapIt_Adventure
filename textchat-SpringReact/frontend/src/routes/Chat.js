@@ -5,8 +5,8 @@ import styled from 'styled-components'
 import SockJs from 'sockjs-client';
 import {useSelector} from "react-redux";
 import '../css/chat.css';
-import Canvas from "./Canvas";
-import { fabric } from "fabric";
+import {TwoDGraph} from "./TwoDGraph"
+
 var Stomp = require('stompjs/lib/stomp.js').Stomp;
 
 
@@ -15,6 +15,8 @@ let ChatInput = styled(InputGroup)`
     bottom: 0;
 `
 var stompClient = null;
+let canvasPoints = null;
+
 function Chat({chat}) {
     let [contents, setContents] = useState([]);
     let [messageInput, setMessageInput] = useState("");
@@ -35,16 +37,16 @@ function Chat({chat}) {
         });
 
         console.log(stompClient.connected);
-        if(stompClient.connected) {
-            console.log("stompClient connected!!!");
-            stompClient.send("/pub/chat/enterUser", {},
-                JSON.stringify({
-                    roomId: chat.roomId,
-                    sender: user.nickName,
-                    type: 'ENTER'
-                })
-            )
-        }
+        // if(stompClient.connected) {
+        //     console.log("stompClient connected!!!");
+        //     stompClient.send("/pub/chat/enterUser", {},
+        //         JSON.stringify({
+        //             roomId: chat.roomId,
+        //             sender: user.nickName,
+        //             type: 'ENTER'
+        //         })
+        //     )
+        // }
     }, []);
 
 
@@ -73,55 +75,26 @@ function Chat({chat}) {
         setMessageInput("");
     }
 
-
-    // convas
-
-    const fabricRef = useRef(null);
-    const canvasRef = useRef(null);
-
-    useEffect(() => {
-        const initFabric = () => {
-            fabricRef.current = new fabric.Canvas(canvasRef.current,{
-                width:1680,
-                height:500,
-                backgroundColor:"white",
-
-                // enableToolbar:true,
-                // showToolbar:true,
-                // brushColor:'blue'
-            });
-        };
-
-        const addRectangle = () => {
-            const rect = new fabric.Rect({
-                top: 50,
-                left: 50,
-                width: 50,
-                height: 50,
-                fill: "red"
-            });
-
-            fabricRef.current.add(rect);
-        };
-
-        const disposeFabric = () => {
-            fabricRef.current.dispose();
-        };
-
-        initFabric();
-        addRectangle();
-
-        return () => {
-            disposeFabric();
-        };
-    }, []);
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            // Do something when the Enter key is pressed
+            sendMessage()
+        }
+    };
 
     return (
-        <Container style={{height:'100%'}}>
+        <Container style={{height:'100vh'}}>
             <Row>
-                <Col xs={4} className='mt-5 div-shadow'>
+                <Col xs={4} style={{height:'auto'}} className='mt-5 div-shadow'>
                     <div>
-                        <h4>Chatting Room : {chat.roomName}</h4>
+                        <Row xs={8} className='mt-3'>
+                            <Col style={{overflowX:"auto"}} xs={8}>
+                                <h4>{chat.roomName} 대화</h4>
+                            </Col>
+                            <Col xs={4}>
+                                <Button>1:1 대화</Button>
+                            </Col>
+                        </Row>
                         <div style={{height:'70vh', overflowY:'auto'}}>
                             {
                                 contents.map((message) => <Message message={message}/>)
@@ -130,7 +103,7 @@ function Chat({chat}) {
                         <ChatInput>
                             <InputGroup className="mb-3">
                                 <Form.Control
-                                    // onChange={(e) => setMessageInput(e.target.value)}
+                                    onKeyDown={handleKeyDown}
                                     onChange={function (e) {
                                         console.log(stompClient);
                                         console.log("start INPUT")
@@ -154,12 +127,18 @@ function Chat({chat}) {
                     </div>
                 </Col>
                 <Col xs={8} className='mt-5'>
-                    <div style={{height:'40%',display:'flex'}} className="div-shadow">
-
+                    <div style={{height:'70%',display:'flex'}}>
+                        {
+                            TwoDGraph(chat.roomId,stompClient,canvasPoints)
+                        }
                     </div>
-                    <div style={{height:'60%',overflow:'auto'}} className="div-shadow">
-                        {/*<Canvas/>*/}
-                        <canvas ref={canvasRef}  width={400} height={400}></canvas>
+                    <div style={{height:'30%',overflow:'auto'}} className="div-shadow">
+
+                        <Button>점 만들기</Button>
+                        <Button>직선 만들기</Button>
+                        <Button>원 만들기</Button>
+                        <Button>2차원 그래프 만들기</Button>
+                        {/*<canvas ref={canvasRef}  width={400} height={400}></canvas>*/}
                     </div>
                 </Col>
             </Row>
@@ -171,14 +150,30 @@ function Chat({chat}) {
 }
 
 function Message({message}) {
-    return (
-        <div className="mine messages">
-            <div className="message last">
-                {message.message}
-            </div>
-        </div>
+    console.log(message);
+    console.log("===================");
+    console.log(message.sender);
+    let user = useSelector(state => state.user);
+    console.log("===================");
+    console.log(user.nickName);
 
-    )
+    if(user.nickName == message.sender){
+        return (
+            <div className="mine messages">
+                <div className="mine message">
+                    {message.message}
+                </div>
+            </div>
+        )
+    }else{
+        return (
+            <div className="yours messages">
+                <div className="message">
+                    {message.message}
+                </div>
+            </div>
+        )
+    }
 }
 
 export default Chat;

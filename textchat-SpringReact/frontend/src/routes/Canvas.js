@@ -17,7 +17,7 @@ export default class Canvas extends Component {
         this.state = {
             mode: 'select',
             width: '1620px',
-            height: props.height,
+            height: '500px',
             brushColor: '#f44336',
             brushThickness: 2,
         }
