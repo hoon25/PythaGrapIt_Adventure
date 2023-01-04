@@ -4,6 +4,11 @@ import axios from 'axios';
 import {useSelector, useDispatch} from "react-redux";
 import {setUser} from "../store/userSlice";
 import {useNavigate} from "react-router-dom";
+import { Link } from 'react-router-dom'
+
+
+
+
 
 
 export function LogIn() {
@@ -32,6 +37,7 @@ export function LogIn() {
     }
 
     return (
+        <>
         <Form onSubmit={login}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
@@ -52,6 +58,11 @@ export function LogIn() {
                 Submit
             </Button>
         </Form>
+        <footer>
+                <p>First time? <Link to="/register">Create an account</Link>.</p>
+                <p><Link to="/">Back to Homepage</Link>.</p>
+            </footer>
+        </>
     );
 }
 
