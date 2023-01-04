@@ -6,9 +6,10 @@ echo "mysql 서버 ON"
 echo "###################"
 
 ./gradlew build
-docker rm -f pgi-was
-docker build -f ./Dockerfile -t pgi-was-image .
-docker run -itd -p 8080:8080 --name pgi-was pgi-was-image
+java -jar build/libs/first-0.0.1-SNAPSHOT.jar
+#docker rm -f pgi-was
+#docker build -f ./Dockerfile -t pgi-was-image .
+#docker run -itd -p 8080:8080 --name pgi-was pgi-was-image
 echo "###################"
 echo "springboot 서버 ON"
 echo "###################"
