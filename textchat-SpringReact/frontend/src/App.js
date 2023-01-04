@@ -10,17 +10,20 @@ import RTC from "./routes/RTC";
 import NavScroll from './navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LandingPage from './pages/LandingPage'
+import Canvas from "./routes/Canvas";
+
 
 
 function App() {
     let user = useSelector(state => state.user);
     let chat = useSelector(state => state.chat);
+    let canvas = useSelector(state => state.canvas);
     let dispatch = useDispatch();
     let navigate = useNavigate();
     
     return (
         <div className="App">
-            <NavScroll user={user}/>
+            <NavScroll />
             <Routes>
                 <Route exact path="/" element={<LandingPage/>}/>
                 <Route path="/login" element={<LogIn/>}/>
@@ -28,6 +31,8 @@ function App() {
                 <Route path="/chat" element={<ChatRoom/>}/>
                 <Route path="/chat/room/msg/:roomId" element={<Chat chat={chat}/>}/>
                 <Route path="/chat/room/rtc/:roomId" element={<RTC chat={chat}/>}/>
+                <Route path="/chat/room/:roomId" element={<Chat chat={chat}/>}/>
+                <Route path="/canvas" element={<Canvas/>}/>
             </Routes>
         </div>
     );

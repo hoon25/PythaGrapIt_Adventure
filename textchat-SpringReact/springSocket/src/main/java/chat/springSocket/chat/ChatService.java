@@ -7,7 +7,6 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -52,8 +51,7 @@ public class ChatService {
     }
 
     public void removeClientByName(ChatRoom room, String userUUID) {
-        chatRepository.removeClientByName(room,userUUID);
+        chatRepository.removeClientByName(room, userUUID);
     }
-
 
 }

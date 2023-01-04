@@ -1,18 +1,19 @@
-import {useEffect, useState} from "react";
-import {Button, Form, InputGroup} from 'react-bootstrap';
+import {useEffect, useState, useRef, useLayoutEffect} from "react";
+import {Button, Col, Container, Form, InputGroup, Row} from 'react-bootstrap';
 
 import styled from 'styled-components'
 import SockJs from 'sockjs-client';
 import {useSelector} from "react-redux";
-
+import '../css/chat.css';
+import Canvas from "./Canvas";
+import { fabric } from "fabric";
 var Stomp = require('stompjs/lib/stomp.js').Stomp;
 
 
 let ChatInput = styled(InputGroup)`
-    position: fixed;
+    //position: fixed;
     bottom: 0;
 `
-
 var stompClient = null;
 function Chat({chat}) {
     let [contents, setContents] = useState([]);
@@ -35,16 +36,16 @@ function Chat({chat}) {
         });
 
         console.log(stompClient.connected);
-        // if(stompClient.connected) {
-        //     console.log("stompClient connected!!!");
-        //     stompClient.send("/pub/chat/enterUser", {},
-        //         JSON.stringify({
-        //             roomId: chat.roomId,
-        //             sender: user.nickName,
-        //             type: 'ENTER'
-        //         })
-        //     )
-        // }
+        if(stompClient.connected) {
+            console.log("stompClient connected!!!");
+            stompClient.send("/pub/chat/enterUser", {},
+                JSON.stringify({
+                    roomId: chat.roomId,
+                    sender: user.nickName,
+                    type: 'ENTER'
+                })
+            )
+        }
     }, []);
 
 
@@ -59,7 +60,7 @@ function Chat({chat}) {
         console.log("sendMessage");
         console.log(messageInput);
         console.log(stompClient);
-
+        console.log("메세지 전송!!!!")
         if (stompClient) {
             stompClient.send("/pub/chat/sendMessage", {},
                 JSON.stringify({
@@ -70,47 +71,114 @@ function Chat({chat}) {
                 })
             )
         }
+        setMessageInput("");
     }
 
 
+    // convas
+
+    const fabricRef = useRef(null);
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        const initFabric = () => {
+            fabricRef.current = new fabric.Canvas(canvasRef.current,{
+                width:1680,
+                height:500,
+                backgroundColor:"white",
+
+                // enableToolbar:true,
+                // showToolbar:true,
+                // brushColor:'blue'
+            });
+        };
+
+        const addRectangle = () => {
+            const rect = new fabric.Rect({
+                top: 50,
+                left: 50,
+                width: 50,
+                height: 50,
+                fill: "red"
+            });
+
+            fabricRef.current.add(rect);
+        };
+
+        const disposeFabric = () => {
+            fabricRef.current.dispose();
+        };
+
+        initFabric();
+        addRectangle();
+
+        return () => {
+            disposeFabric();
+        };
+    }, []);
+
     return (
-        <div>
-            <h4>Chatting Room : {chat.roomName}입니다.</h4>
-            {
-                contents.map((message) => <Message message={message}/>)
-            }
-            <ChatInput>
-                <InputGroup className="mb-3">
-                    <Form.Control
-                        // onChange={(e) => setMessageInput(e.target.value)}
-                        onChange={function (e) {
-                            console.log(stompClient);
-                            console.log("start INPUT")
-                            console.log(stompClient);
-                            setMessageInput(e.target.value);
-                            console.log("end INPUT")
-                            console.log(stompClient);
-                        }}
-                        placeholder="Recipient's username"
-                        aria-label="Recipient's username"
-                        aria-describedby="basic-addon2"
-                    />
-                    <Button onClick={() =>
-                        sendMessage()
-                    } variant="outline-secondary" id="button-addon2">
-                        Button
-                    </Button>
-                </InputGroup>
-            </ChatInput>
-        </div>
+        <Container style={{height:'100%'}}>
+            <Row>
+                <Col xs={4} className='mt-5 div-shadow'>
+                    <div>
+                        <h4>Chatting Room : {chat.roomName}</h4>
+                        <div style={{height:'70vh', overflowY:'auto'}}>
+                            {
+                                contents.map((message) => <Message message={message}/>)
+                            }
+                        </div>
+                        <ChatInput>
+                            <InputGroup className="mb-3">
+                                <Form.Control
+                                    // onChange={(e) => setMessageInput(e.target.value)}
+                                    onChange={function (e) {
+                                        console.log(stompClient);
+                                        console.log("start INPUT")
+                                        console.log(stompClient);
+                                        setMessageInput(e.target.value);
+                                        console.log("end INPUT")
+                                        console.log(stompClient);
+                                    }}
+                                    placeholder="메세지를 입력하세요"
+                                    aria-label="Recipient's username"
+                                    aria-describedby="basic-addon2"
+                                    value={messageInput}
+                                />
+                                <Button onClick={() =>
+                                    sendMessage()
+                                } variant="outline-secondary" id="button-addon2">
+                                    전송
+                                </Button>
+                            </InputGroup>
+                        </ChatInput>
+                    </div>
+                </Col>
+                <Col xs={8} className='mt-5'>
+                    <div style={{height:'40%',display:'flex'}} className="div-shadow">
+
+                    </div>
+                    <div style={{height:'60%',overflow:'auto'}} className="div-shadow">
+                        {/*<Canvas/>*/}
+                        <canvas ref={canvasRef}  width={400} height={400}></canvas>
+                    </div>
+                </Col>
+            </Row>
+        </Container>
     )
+
+    //canvas
+
 }
 
 function Message({message}) {
     return (
-        <div>
-            {message.message}
+        <div className="mine messages">
+            <div className="message last">
+                {message.message}
+            </div>
         </div>
+
     )
 }
 

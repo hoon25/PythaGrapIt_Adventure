@@ -23,5 +23,4 @@ public interface ChatRepository {
     Map<String, WebSocketSession> addClient(ChatRoom room, String name, WebSocketSession session);
     Map<String ,WebSocketSession> getClients(ChatRoom room);
     void removeClientByName(ChatRoom room, String userUUID);
-
 }

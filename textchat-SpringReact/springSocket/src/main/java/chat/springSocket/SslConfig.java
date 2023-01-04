@@ -1,6 +1,5 @@
 package chat.springSocket;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SslConfig {
-
     @Bean
     public ServletWebServerFactory servletContainer() {
         // Enable SSL Trafic
@@ -49,5 +47,5 @@ public class SslConfig {
     }
 
 
-
 }
+

@@ -27,8 +27,6 @@ public class SignalHandler extends TextWebSocketHandler {
 
     private final ChatService chatService;
 
-//    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String MSG_TYPE_OFFER = "offer";
@@ -50,7 +48,6 @@ public class SignalHandler extends TextWebSocketHandler {
         System.out.println("session = " + session);
         rooms = chatService.findAllRoom();
         sendMessage(session, new WebRTCMessage("Server", MSG_TYPE_JOIN, Boolean.toString(!rooms.isEmpty()), null, null));
-//        sendMessage(session, new WebRTCMessage("Server", MSG_TYPE_JOIN, tr, null, null));
     }
 
 
@@ -67,6 +64,7 @@ public class SignalHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage textMessage){
+
 //        System.out.println("SignalHandler.handleTextMessage");
 //        System.out.println("textMessage = " + textMessage);
         try {
@@ -75,6 +73,7 @@ public class SignalHandler extends TextWebSocketHandler {
             System.out.println("[ws] Message of "+webRTCMessage.getType()+ "type from "+webRTCMessage.getFrom() +" received");
 
             String userUUID = webRTCMessage.getFrom();
+
             String roomId = webRTCMessage.getData();
 
             ChatRoom room;
@@ -88,6 +87,7 @@ public class SignalHandler extends TextWebSocketHandler {
                     Object sdp = webRTCMessage.getSdp();
 
                     log.debug("[ws] Signal: {}",
+
                             candidate != null
                                     ? candidate.toString().substring(0, 64)
                                     : sdp.toString().substring(0, 64));
@@ -121,6 +121,7 @@ public class SignalHandler extends TextWebSocketHandler {
                     room = chatService.findRoomById(roomId);
 
                     chatService.addClient(room, userUUID, session);
+
                     System.out.println("JOIN CHECK");
                     System.out.println(chatService.findRoomById(roomId));
 //                    rooms.add(room);

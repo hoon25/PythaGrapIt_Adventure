@@ -18,12 +18,13 @@ public class WebRtcConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(signalHandler,"/signal")
+        registry.addHandler(signalHandler, "/signal")
                 .setAllowedOriginPatterns("*");
+
     }
 
     @Bean
-    public ServletServerContainerFactoryBean createWebSocketContainer(){
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
         container.setMaxTextMessageBufferSize(32768);
         container.setMaxBinaryMessageBufferSize(32768);
