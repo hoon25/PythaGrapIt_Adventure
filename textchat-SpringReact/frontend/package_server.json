@@ -35,7 +35,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "http://host.docker.internal:8080",
+  "proxy": "http://localhost:8080",
 
   "browserslist": {
     "production": [

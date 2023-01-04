@@ -73,7 +73,7 @@ function RTC({chat}) {
 
     var socket;
     useEffect(() => {
-        socket = new WebSocket("wss://localhost:8443/signal");
+        socket = new WebSocket("wss://localhost:443/signal");
         console.log("RTC start")
         console.log("localUserName : " + localUserName);
         console.log("localRoom : " + localRoom);
