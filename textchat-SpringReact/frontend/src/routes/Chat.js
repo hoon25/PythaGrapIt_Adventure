@@ -1,10 +1,12 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef, useLayoutEffect} from "react";
 import {Button, Col, Container, Form, InputGroup, Row} from 'react-bootstrap';
 
 import styled from 'styled-components'
 import SockJs from 'sockjs-client';
 import {useSelector} from "react-redux";
 import '../css/chat.css';
+import Canvas from "./Canvas";
+import { fabric } from "fabric";
 var Stomp = require('stompjs/lib/stomp.js').Stomp;
 
 
@@ -12,7 +14,6 @@ let ChatInput = styled(InputGroup)`
     //position: fixed;
     bottom: 0;
 `
-
 var stompClient = null;
 function Chat({chat}) {
     let [contents, setContents] = useState([]);
@@ -34,16 +35,16 @@ function Chat({chat}) {
         });
 
         console.log(stompClient.connected);
-        // if(stompClient.connected) {
-        //     console.log("stompClient connected!!!");
-        //     stompClient.send("/pub/chat/enterUser", {},
-        //         JSON.stringify({
-        //             roomId: chat.roomId,
-        //             sender: user.nickName,
-        //             type: 'ENTER'
-        //         })
-        //     )
-        // }
+        if(stompClient.connected) {
+            console.log("stompClient connected!!!");
+            stompClient.send("/pub/chat/enterUser", {},
+                JSON.stringify({
+                    roomId: chat.roomId,
+                    sender: user.nickName,
+                    type: 'ENTER'
+                })
+            )
+        }
     }, []);
 
 
@@ -58,7 +59,7 @@ function Chat({chat}) {
         console.log("sendMessage");
         console.log(messageInput);
         console.log(stompClient);
-
+        console.log("메세지 전송!!!!")
         if (stompClient) {
             stompClient.send("/pub/chat/sendMessage", {},
                 JSON.stringify({
@@ -73,10 +74,52 @@ function Chat({chat}) {
     }
 
 
+    // convas
+
+    const fabricRef = useRef(null);
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        const initFabric = () => {
+            fabricRef.current = new fabric.Canvas(canvasRef.current,{
+                width:1680,
+                height:500,
+                backgroundColor:"white",
+
+                // enableToolbar:true,
+                // showToolbar:true,
+                // brushColor:'blue'
+            });
+        };
+
+        const addRectangle = () => {
+            const rect = new fabric.Rect({
+                top: 50,
+                left: 50,
+                width: 50,
+                height: 50,
+                fill: "red"
+            });
+
+            fabricRef.current.add(rect);
+        };
+
+        const disposeFabric = () => {
+            fabricRef.current.dispose();
+        };
+
+        initFabric();
+        addRectangle();
+
+        return () => {
+            disposeFabric();
+        };
+    }, []);
+
     return (
         <Container style={{height:'100%'}}>
             <Row>
-                <Col xs={4} className='mt-5 chat-row'>
+                <Col xs={4} className='mt-5 div-shadow'>
                     <div>
                         <h4>Chatting Room : {chat.roomName}</h4>
                         <div style={{height:'70vh', overflowY:'auto'}}>
@@ -110,13 +153,21 @@ function Chat({chat}) {
                         </ChatInput>
                     </div>
                 </Col>
-                <Col xs={8}>
+                <Col xs={8} className='mt-5'>
+                    <div style={{height:'40%',display:'flex'}} className="div-shadow">
 
-
+                    </div>
+                    <div style={{height:'60%',overflow:'auto'}} className="div-shadow">
+                        {/*<Canvas/>*/}
+                        <canvas ref={canvasRef}  width={400} height={400}></canvas>
+                    </div>
                 </Col>
             </Row>
         </Container>
     )
+
+    //canvas
+
 }
 
 function Message({message}) {

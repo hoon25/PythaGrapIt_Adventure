@@ -1,6 +1,5 @@
 package com.example.demo.config;
 
-import com.example.demo.handler.ChatHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

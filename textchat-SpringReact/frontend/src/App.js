@@ -6,11 +6,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {LogIn, LogOut} from './routes/LogIn';
 import ChatRoom from "./routes/ChatRoom";
 import Chat from "./routes/Chat";
+import Canvas from "./routes/Canvas";
 
 
 function App() {
     let user = useSelector(state => state.user);
     let chat = useSelector(state => state.chat);
+    let canvas = useSelector(state => state.canvas);
     let dispatch = useDispatch();
     let navigate = useNavigate();
 
@@ -23,6 +25,7 @@ function App() {
                     <Nav className="me-auto">
                         <Nav.Link onClick={() => navigate("/")}>Home</Nav.Link>
                         <Nav.Link onClick={() => navigate("/chat")}>Chat</Nav.Link>
+                        <Nav.Link onClick={() => navigate("/canvas")}>Canvas</Nav.Link>
                         <Nav.Link href="#pricing">Pricing</Nav.Link>
                     </Nav>
                 </Container>
@@ -39,6 +42,7 @@ function App() {
                 <Route path="/logout" element={<LogOut/>}/>
                 <Route path="/chat" element={<ChatRoom/>}/>
                 <Route path="/chat/room/:roomId" element={<Chat chat={chat}/>}/>
+                <Route path="/canvas" element={<Canvas/>}/>
             </Routes>
         </div>
     );
