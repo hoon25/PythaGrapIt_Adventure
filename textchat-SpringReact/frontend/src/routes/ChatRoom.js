@@ -71,7 +71,7 @@ function ChatRoom({chat, i}) {
                 <td>{chat.roomName}</td>
                 <td><Button variant="primary" onClick={function () {
                     dispatch(setChat(chat));
-                    navigate(`/chat/room/${chat.roomId}`);
+                    navigate(`/RtcChat/room/${chat.roomId}`);
                 }
                 }>입장하기</Button></td>
             </tr>

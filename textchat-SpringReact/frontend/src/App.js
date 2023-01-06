@@ -7,6 +7,8 @@ import {LogIn, LogOut} from './routes/LogIn';
 import ChatRoom from "./routes/ChatRoom";
 import Chat from "./routes/Chat";
 import Canvas from "./routes/Canvas";
+import RtcChat from "./routes/RtcChat";
+
 
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
 
     return (
         <div className="App">
+
 
             <Navbar bg="dark" variant="dark">
                 <Container>
@@ -42,6 +45,7 @@ function App() {
                 <Route path="/logout" element={<LogOut/>}/>
                 <Route path="/chat" element={<ChatRoom/>}/>
                 <Route path="/chat/room/:roomId" element={<Chat chat={chat}/>}/>
+                <Route path="/RtcChat/room/:roomId" element={<RtcChat chat={chat}/>}/>
                 <Route path="/canvas" element={<Canvas/>}/>
             </Routes>
         </div>

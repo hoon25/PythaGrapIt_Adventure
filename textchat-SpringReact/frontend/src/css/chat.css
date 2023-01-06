@@ -96,3 +96,15 @@
     background: white;
     border-bottom-left-radius: 10px;
 }
+
+.questioncontent{
+    opacity: 1;
+}
+
+.test-child{
+    position: absolute;
+}
+
+.test-parent{
+    position:relative;
+}

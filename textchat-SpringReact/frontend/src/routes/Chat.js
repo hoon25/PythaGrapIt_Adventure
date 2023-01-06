@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import SockJs from 'sockjs-client';
 import {useSelector} from "react-redux";
 import '../css/chat.css';
-import {TwoDGraph} from "./TwoDGraph"
+import {TwoDGraph} from "../component/TwoDGraph"
 
 var Stomp = require('stompjs/lib/stomp.js').Stomp;
 
@@ -15,11 +15,11 @@ let ChatInput = styled(InputGroup)`
     bottom: 0;
 `
 var stompClient = null;
-let canvasPoints = null;
 
 function Chat({chat}) {
     let [contents, setContents] = useState([]);
     let [messageInput, setMessageInput] = useState("");
+    let [drawPoints,setDrawPoints] = useState(null);
 
     let user = useSelector(state => state.user);
 
@@ -52,9 +52,21 @@ function Chat({chat}) {
 
     function onMessageReceived(payload) {
         console.log("onMessageReceived");
-        console.log(payload);
+        // console.log(payload);
         let newMessage = JSON.parse(payload.body);
-        setContents(contents => [...contents, newMessage]);
+
+        if (newMessage.type == "TALK"){
+            setContents(contents => [...contents, newMessage]);
+        }else{
+            console.log("수정");
+            console.log(newMessage);
+            // console.log(newMessage.sender);
+            // console.log(user.nickName);
+            // console.dir(newMessage.message);
+            // if(newMessage.sender != user.nickName){
+                setDrawPoints(newMessage);
+            // }
+        }
     }
 
     function sendMessage() {
@@ -75,12 +87,19 @@ function Chat({chat}) {
         setMessageInput("");
     }
 
+
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             // Do something when the Enter key is pressed
             sendMessage()
         }
     };
+
+    const handler = (event) => {
+       event.preventDefault();
+       console.log("하하하");
+    };
+
 
     return (
         <Container style={{height:'100vh'}}>
@@ -127,13 +146,10 @@ function Chat({chat}) {
                     </div>
                 </Col>
                 <Col xs={8} className='mt-5'>
-                    <div style={{height:'70%',display:'flex'}}>
-                        {
-                            TwoDGraph(chat.roomId,stompClient,canvasPoints)
-                        }
+                    <div onDrag={handler} style={{height:'70%',display:'flex'}}>
+                        <TwoDGraph roomId={chat.roomId} stompClient={stompClient} drawPoints={drawPoints}/>
                     </div>
                     <div style={{height:'30%',overflow:'auto'}} className="div-shadow">
-
                         <Button>점 만들기</Button>
                         <Button>직선 만들기</Button>
                         <Button>원 만들기</Button>
@@ -172,6 +188,20 @@ function Message({message}) {
                     {message.message}
                 </div>
             </div>
+        )
+    }
+}
+
+export function sendDrawMessage(roomId, nickName, message, type) {
+
+    if (stompClient) {
+        stompClient.send("/pub/chat/sendMessage", {},
+            JSON.stringify({
+                roomId: roomId,
+                sender: nickName,
+                message: message,
+                type: type
+            })
         )
     }
 }

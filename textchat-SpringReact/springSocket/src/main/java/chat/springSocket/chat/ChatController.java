@@ -39,10 +39,10 @@ public class ChatController {
     @MessageMapping("/chat/sendMessage")
     public void sendMessage(@Payload ChatDTO chat, SimpMessageHeaderAccessor headerAccessor) {
         System.out.println("ChatController.sendMessage");
-        System.out.println("chat.getSender() = " + chat.getSender());
-        System.out.println("chat.getMessage() = " + chat.getMessage());
+//        System.out.println("chat.getSender() = " + chat.getSender());
+//        System.out.println("chat.getMessage() = " + chat.getMessage());
 
-        chat.setMessage(chat.getSender() + " : " + chat.getMessage());
+//        chat.setMessage(chat.getSender() + " : " + chat.getMessage());
         template.convertAndSend("/sub/chat/room/" + chat.getRoomId(), chat);
     }
 
