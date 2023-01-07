@@ -1,8 +1,10 @@
 package chat.springSocket.chat;
 
 import chat.springSocket.user.UserEntity;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ChatRepository {
 
@@ -18,4 +20,7 @@ public interface ChatRepository {
 
     void delRoomUser (String roomId, Long userId);
 
+    Map<String, WebSocketSession> addClient(ChatRoom room, String name, WebSocketSession session);
+    Map<String ,WebSocketSession> getClients(ChatRoom room);
+    void removeClientByName(ChatRoom room, String userUUID);
 }

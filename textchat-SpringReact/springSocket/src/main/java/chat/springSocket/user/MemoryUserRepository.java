@@ -22,13 +22,23 @@ public class MemoryUserRepository implements UserRepository {
         // 테스트용 데이터
         userEntityMap.put(1L, UserEntity.builder()
                 .userId(1L)
-                .nickName("jungle")
+                .nickName("운영자")
                 .email("jungle@naver.com")
                 .build());
         userEntityMap.put(2L, UserEntity.builder()
                 .userId(2L)
-                .nickName("jungle2")
-                .email("jungle2@naver.com")
+                .nickName("신종우 선생님")
+                .email("tlswhddn@naver.com")
+                .build());
+        userEntityMap.put(3L, UserEntity.builder()
+                .userId(3L)
+                .nickName("이해인")
+                .email("dlgodls@naver.com")
+                .build());
+        userEntityMap.put(4L, UserEntity.builder()
+                .userId(4L)
+                .nickName("김지수")
+                .email("rlawltn@naver.com")
                 .build());
     }
 
